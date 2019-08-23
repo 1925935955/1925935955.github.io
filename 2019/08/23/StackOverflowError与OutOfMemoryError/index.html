@@ -6,19 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://1925935955.github.io">
-  <title>Archives: 2019 | Mr.G&#39;s Blog</title>
+  <title>StackOverflowError与OutOfMemoryError | Mr.G&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="用于记录一些学习成果与心得">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mr.G&#39;s Blog">
-<meta property="og:url" content="http://1925935955.github.io/archives/2019/index.html">
+  <meta name="description" content="理解StackOverflowError与OutOfMemoryError的区别">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="StackOverflowError与OutOfMemoryError">
+<meta property="og:url" content="http://1925935955.github.io/2019/08/23/StackOverflowError与OutOfMemoryError/index.html">
 <meta property="og:site_name" content="Mr.G&#39;s Blog">
-<meta property="og:description" content="用于记录一些学习成果与心得">
+<meta property="og:description" content="理解StackOverflowError与OutOfMemoryError的区别">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="http://1925935955.github.io/post_img/StackOverflowError%E4%B8%8EOutOfMemoryError/01.png">
+<meta property="og:image" content="http://1925935955.github.io/post_img/StackOverflowError%E4%B8%8EOutOfMemoryError/02.jpg">
+<meta property="og:image" content="http://1925935955.github.io/post_img/StackOverflowError%E4%B8%8EOutOfMemoryError/03.jpg">
+<meta property="og:updated_time" content="2019-08-23T11:33:12.143Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mr.G&#39;s Blog">
-<meta name="twitter:description" content="用于记录一些学习成果与心得">
+<meta name="twitter:title" content="StackOverflowError与OutOfMemoryError">
+<meta name="twitter:description" content="理解StackOverflowError与OutOfMemoryError的区别">
+<meta name="twitter:image" content="http://1925935955.github.io/post_img/StackOverflowError%E4%B8%8EOutOfMemoryError/01.png">
   
     <link rel="alternative" href="/atom.xml" title="Mr.G&#39;s Blog" type="application/atom+xml">
   
@@ -212,41 +218,125 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-StackOverflowError与OutOfMemoryError" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
   
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
+    <h1 class="article-title" itemprop="name">
+      StackOverflowError与OutOfMemoryError
+    </h1>
+  
+
+
+  
+  
+        
+        <span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
 <a href="/2019/08/23/StackOverflowError与OutOfMemoryError/" class="archive-article-date">
         <time datetime="2019-08-23T11:17:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-23</time>
 </a>
 
+  
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在Java中我们经常会遇到StackOverflowError与OutOfMemoryError这两个异常报错</p>
+<p>我们都知道这是内存溢出了，但是这两个异常具体有什么区别却不得而知，我在查阅资料之后结合自己的理解写下这篇博客，希望能够帮助大家理解</p>
+<a id="more"></a>
+
+<p>﻿# Java 内存区域</p>
+<h2 id="运行时数据区"><a href="#运行时数据区" class="headerlink" title="运行时数据区"></a><a href="#1">运行时数据区</a></h2><h2 id="StackOverflowError"><a href="#StackOverflowError" class="headerlink" title="StackOverflowError"></a><a href="#2">StackOverflowError</a></h2><h2 id="OutOfMemoryError"><a href="#OutOfMemoryError" class="headerlink" title="OutOfMemoryError"></a><a href="#3">OutOfMemoryError</a></h2><h2 id="个人理解图"><a href="#个人理解图" class="headerlink" title="个人理解图"></a><a href="#4">个人理解图</a></h2><h2 id="运行时数据区-1"><a href="#运行时数据区-1" class="headerlink" title="运行时数据区"></a><span id="1">运行时数据区</span></h2><p><img src="/post_img/StackOverflowError%E4%B8%8EOutOfMemoryError/01.png" alt="运行时数据区"></p>
+<h3 id="线程私有的："><a href="#线程私有的：" class="headerlink" title="线程私有的："></a>线程私有的：</h3><ul>
+<li>程序计数器</li>
+<li>虚拟机栈</li>
+<li>本地方法栈</li>
+</ul>
+<h3 id="线程共享的："><a href="#线程共享的：" class="headerlink" title="线程共享的："></a>线程共享的：</h3><ul>
+<li>堆</li>
+<li>方法区</li>
+<li>直接内存(非运行时数据区的一部分)<h4 id="虚拟机栈-本地方法栈-与-堆"><a href="#虚拟机栈-本地方法栈-与-堆" class="headerlink" title="虚拟机栈/本地方法栈 与 堆"></a>虚拟机栈/本地方法栈 与 堆</h4>无论是本地方法栈，还是虚拟机栈，都是线程私有的，当一个线程启动的时候，jvm就会给这个线程分配一个栈，然后每当你调用一个方法的时候，jvm就会往这个栈压入一个栈帧，方法调用完毕，栈帧出栈。注意，一个栈能容纳的栈帧是固定的，有默认的值，当然你也可以通过-Xss去调。</li>
+</ul>
+<p>但这个栈里面的引用所指向堆内存空间是可以扩展的。简而言之，一个栈的栈帧数目是确定的，而与该栈相关联的 堆内存 是可以动态扩展的，这些是前提。</p>
+<p>堆：此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例以及数组都在这里分配内存。</p>
+<h2 id="StackOverflowError-1"><a href="#StackOverflowError-1" class="headerlink" title="StackOverflowError"></a><span id="2">StackOverflowError</span></h2><p>StackOverFlowError： 若Java虚拟机栈的内存大小不允许动态扩展，那么当线程请求栈的深度超过当前Java虚拟机栈的最大深度的时候，就抛出StackOverFlowError异常。</p>
+<p>当一个线程启动的时候，jvm就会给这个线程分配一个栈，随着程序的执行，会不断执行方法，因此栈帧会不断 入栈 和 出栈 。然而，一个栈所能容纳的栈帧是有限的，当栈帧的数量超过了栈所允许的范围的时候（比如递归调用），就会抛出StackOverflowError异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public void replay() &#123;</span><br><span class="line">        recursion();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Test test = new Test();</span><br><span class="line">        test.replay();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的一个测试就是不断地调用replay方法（递归调用），入栈速度 大于 出栈速度，使栈帧不断增加，最后超出该栈的允许范围，而抛出StackOverflowError异常</p>
+<h2 id="OutOfMemoryError-1"><a href="#OutOfMemoryError-1" class="headerlink" title="OutOfMemoryError"></a><span id="3">OutOfMemoryError</span></h2><p>OutOfMemoryError： 若 Java 虚拟机栈的内存大小允许动态扩展，且当线程请求栈时内存用完了，无法再动态扩展了，此时抛出OutOfMemoryError异常。</p>
+<p>源代码也解释说:因为内存溢出,JVM不能分配给对象的创建空间.并且GC也不能够回收足够的空间.当你创建对象的速度快于JVM回收空间的时候就会发生空间不足这个问题</p>
+<p>通过上面对 “堆” 的介绍可以知道，Java堆用于存储对象实例，只要不断地创建对象，并且没有被垃圾回收机制清除，在对象数量到达最大堆的容量限制后就会产生内存溢出异常。<br>异常信息提示“java.lang.OutOfMemoryError”, “Java heap space”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        ArrayList&lt;Test&gt; list = new ArrayList&lt;Test&gt;();</span><br><span class="line"></span><br><span class="line">        while (true) &#123;</span><br><span class="line">            list.add(new Test());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的测试是在不断地创建对象，且我们知道 list 便是可以动态扩展的，但当JVM没有更多的空间可以分配给正在动态扩展的堆内存时，便会抛出OutOfMemoryError异常。</p>
+<h2 id="个人理解图-1"><a href="#个人理解图-1" class="headerlink" title="个人理解图"></a><span id="4">个人理解图</span></h2><p><img src="/post_img/StackOverflowError%E4%B8%8EOutOfMemoryError/02.jpg" alt="StackOverflowError"><br><img src="/post_img/StackOverflowError%E4%B8%8EOutOfMemoryError/03.jpg" alt="OutOfMemoryError"></p>
+
+    
+
+    
+    <div class="page-reward">
+      <a href="javascript:void(0);" class="page-reward-btn tooltip-top" target="_self">
+        <div class="tooltip tooltip-east">
+          <span class="tooltip-item">
+            赏
+          </span>
+          <span class="tooltip-content">
+            <span class="tooltip-text">
+              <span class="tooltip-inner">
+                <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i
+                    class="icon icon-quo-right"></i></p>
+                <div class="reward-box">
+                  
+                  <div class="reward-box-item">
+                    <img class="reward-img" src="/img/alipay.png">
+                    <span class="reward-type">支付宝</span>
+                  </div>
+                  
+                  
+                  <div class="reward-box-item">
+                    <img class="reward-img" src="/img/weixin.png">
+                    <span class="reward-type">微信</span>
+                  </div>
+                  
+                </div>
+              </span>
+            </span>
+          </span>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2019/08/23/StackOverflowError与OutOfMemoryError/">StackOverflowError与OutOfMemoryError</a>
-	
-    </h1>
-  
+      </a>
+    </div>
+    
 
+    
+    <div class="declare"> 
+      <ul class="post-copyright">
+        <li>
+          <strong>本文作者：</strong>
+          Jiahao G
+        </li>
+        <li>
+          <strong>本文链接：</strong>
+          <a href="http://1925935955.github.io/2019/08/23/StackOverflowError与OutOfMemoryError/" title="StackOverflowError与OutOfMemoryError" target="_blank">http://1925935955.github.io/2019/08/23/StackOverflowError与OutOfMemoryError/</a>
+        </li>
+        <li>
+          <strong>版权声明： </strong>
+          本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow" target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+        </li>
+      </ul>
+    </div>
+    
 
-        <div class="article-info info-on-right">
-          
+  </div>
+  <div class="article-info article-info-index">
+    
+    
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -258,105 +348,130 @@
 		</ul>
 	</div>
 
-          
+    
 
+    
+
+    
+    
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <!-- <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a> -->
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=http://1925935955.github.io/2019/08/23/StackOverflowError与OutOfMemoryError/" alt="微信分享二维码"> -->
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+
+    
+    <div class="clearfix"></div>
+  </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2019/08/19/DIY你专属的PS/" class="archive-article-date">
-        <time datetime="2019-08-19T09:32:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-19</time>
-</a>
 
+
+<nav id="article-nav">
+  
+  
+    <a href="/2019/08/19/DIY你专属的PS/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">DIY你专属的PS</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
   
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2019/08/19/DIY你专属的PS/">DIY你专属的PS</a>
-	
-    </h1>
+  <div id="gitment-ctn"></div>
   
-
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+    <!-- 中文 -->
+    <link rel="stylesheet" href="/lib/gitment.css">
+    <script src="/lib/gitment.js"></script>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2019/08/16/hello-world/" class="archive-article-date">
-        <time datetime="2019-08-16T12:12:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-16</time>
-</a>
+  <script>
+    <!-- id: "StackOverflowError与OutOfMemoryError" -->
+    var gitment = new Gitment({
+      id: "20190823191708",
+      owner: '1925935955',
+      repo: '1925935955.github.io',
+      oauth: {
+        client_id: '1d0a0305e3531d0d60a3',
+        client_secret: '6382556ab1e4dba5779477a6df01eee648947737',
+      },
+    })
+    gitment.render('gitment-ctn')
+  </script>
 
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2019/08/16/hello-world/">Hello Hexo</a>
-	
-    </h1>
+
   
 
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -397,8 +512,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
